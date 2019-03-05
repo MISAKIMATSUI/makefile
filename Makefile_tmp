@@ -26,7 +26,6 @@ $(PROG):$(COBJS)
 
 all:$(PROG)
 
-
 clean
 	find ./ -name "*.o" -print | xargs -o -n1 rm
 	find ./ -path "$(PROGDIR)/$(PROG)" -print | xargs -o -n1 rm
