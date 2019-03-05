@@ -1,16 +1,31 @@
-C             = g++
-CFLAGS        = -O4 -Wall -I/usr/local/include
-DEST          = /usr/local/bin
-LDFLAGS       = -L/usr/local/lib
-LIBS          = -lhoge -lm
-OBJS          = main.o sub.o
-PROGRAM       = myprogram
+CC            = g++ -std=c++11
+PROG          =
 
-all:            $(PROGRAM)
+PROGDIR	     :=.
+SRCROOT      :=.
 
-$(PROGRAM):     $(OBJS)
-				$(CC) $(OBJS) $(LDFLAGS) $(LIBS) -o $(PROGRAM)
-clean:;         rm -f *.o *~ $(PROGRAM)
+SRCDIRS      :=
+SRCS         :=
 
-install:        $(PROGRAM)
-				install -s $(PROGRAM) $(DEST)
+SRCS         += $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.cpp))
+OBJS         := (addprefix $(SRCROOT)/, $(SRCS:.cpp=.o))
+
+CFLAGS       :=
+CFLAGS       += -g 
+CFLAGS       += -O4 -Wall 
+CFLAGS       += -I/usr/local/include
+
+LDFLAGS      :=
+CLIBS        :=
+
+$(PROG):$(COBJS)
+	$(CC) $^ -o $(PROGDIR)/$@ $(CFLAGS) $(CLIBS)
+
+%.o:%.cpp
+	$(CC) -c $^ -o $@ $(CFLAGS) $(CLIBS)
+
+all:$(PROG)
+
+clean
+	find ./ -name "*.o" -print | xargs -o -n1 rm
+	find ./ -path "$(PROGDIR)/$(PROG)" -print | xargs -o -n1 rm
